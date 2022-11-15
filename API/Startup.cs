@@ -28,13 +28,20 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt => {
-                opt.UseSqlite(_config.GetConnectionString("DefaultConnection"));
-            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            });
+
+            services.AddDbContext<DataContext>(opt => {
+                opt.UseSqlite(_config.GetConnectionString("DefaultConnection"));
+            });
+
+            services.AddCors(options => {
+                options.AddPolicy("react", policy => {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
             });
         }
 
@@ -48,9 +55,13 @@ namespace API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
-            app.UseHttpsRedirection();
+            // removed since we're using HTTP only
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // set UseCors ALWAYS AFTER routing
+            app.UseCors("react");
 
             app.UseAuthorization();
 
