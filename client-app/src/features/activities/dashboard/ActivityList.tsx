@@ -1,19 +1,14 @@
+import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useState } from 'react';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
-import { Activity } from '../../../app/models/activity';
-
-interface Props {
-    activities: Activity[];
-    selectActivity: (id: string) => void;
-    deleteActivity: (id: string) => void;
-    submitting: boolean;
-}
+import { useStore } from '../../../app/stores/store';
 
 
-export default function ActivityList({activities, selectActivity,
-        deleteActivity, submitting}: Props) {
+function ActivityList() {
 
     const [target, setTarget] = useState('');
+    const {activityStore} = useStore();
+    const {activitiesByDate, selectActivity, deleteActivity, loading} = activityStore;
 
     function handleActivityDelete(evnt: SyntheticEvent<HTMLButtonElement>, id: string) {
         setTarget(evnt.currentTarget.name);
@@ -23,7 +18,7 @@ export default function ActivityList({activities, selectActivity,
     return (
         <Segment>
             <Item.Group divided>
-                {activities.map((activity) => (
+                {activitiesByDate.map((activity) => (
                     <Item key={activity.id}>
                         <Item.Content>
                             <Item.Header as='a'>{activity.title}</Item.Header>
@@ -35,7 +30,7 @@ export default function ActivityList({activities, selectActivity,
                             <Item.Extra>
                                 <Button onClick={() => selectActivity(activity.id)} 
                                     floated='right' content='View' color='blue' />
-                                <Button name={activity.id} loading={submitting && target === activity.id} 
+                                <Button name={activity.id} loading={loading && target === activity.id} 
                                     onClick={(evnt) => handleActivityDelete(evnt, activity.id)} 
                                     floated='right' content='Delete' color='red' />
                                 <Label basic content={activity.category} />
@@ -47,3 +42,5 @@ export default function ActivityList({activities, selectActivity,
         </Segment>
     )
 }
+
+export default observer(ActivityList);
