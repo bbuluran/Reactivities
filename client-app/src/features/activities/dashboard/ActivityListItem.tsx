@@ -10,25 +10,6 @@ interface Props {
 export default function ActivityListItem({activity}: Props) {
 
     return (
-        // <Item key={activity.id}>
-        //     <Item.Content>
-        //         <Item.Header as='a'>{activity.title}</Item.Header>
-        //         <Item.Meta>{activity.date}</Item.Meta>
-        //         <Item.Description>
-        //             <div>{activity.description}</div>
-        //             <div>{activity.city}, {activity.venue}</div>
-        //         </Item.Description>
-        //         <Item.Extra>
-        //             <Button as={Link} to={`/activities/${activity.id}`}
-        //                 floated='right' content='View' color='blue' />
-        //             <Button name={activity.id} loading={loading && target === activity.id} 
-        //                 onClick={(evnt) => handleActivityDelete(evnt, activity.id)} 
-        //                 floated='right' content='Delete' color='red' />
-        //             <Label basic content={activity.category} />
-        //         </Item.Extra>
-        //     </Item.Content>
-        // </Item>
-
         <Segment.Group>
             <Segment>
                 <Item.Group>

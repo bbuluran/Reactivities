@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -11,12 +12,12 @@ namespace Application.Activities
 {
     public class Delete
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
 
@@ -25,16 +26,18 @@ namespace Application.Activities
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities.SingleOrDefaultAsync(a => a.Id == request.Id);
                 if (activity != null) 
                 {
                     _context.Activities.Remove(activity);
-                    await _context.SaveChangesAsync();
+                    var result = await _context.SaveChangesAsync() > 0;
+                    return result ? Result<Unit>.Success(Unit.Value) : 
+                        Result<Unit>.Failure("Activity was not removed.");
                 }
-
-                return Unit.Value;
+                // no activity found
+                return null;
             }
         }
     }
