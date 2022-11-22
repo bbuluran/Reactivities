@@ -23,23 +23,6 @@ function ActivityDetails() {
     if (loadingInitial || !selectedActivity) return <LoadingComponent />;
 
     return (
-        // <Card fluid>
-        //     <Image src={`/assets/categoryImages/${selectedActivity?.category}.jpg`} />
-        //     <Card.Content>
-        //         <Card.Header>{selectedActivity?.title}</Card.Header>
-        //         <Card.Meta>
-        //             <span>{selectedActivity?.date}</span>
-        //         </Card.Meta>
-        //         <Card.Description>{selectedActivity?.description}</Card.Description>
-        //     </Card.Content>
-        //     <Card.Content extra>
-        //         <Button.Group widths='2'>
-        //             <Button as={Link} to={`/manage/${selectedActivity.id}`} basic color='blue' content='Edit'/>
-        //             <Button as={Link} to='/activities' basic color='grey' content='Cancel'/>
-        //         </Button.Group>
-        //     </Card.Content>
-        // </Card>
-
         <Grid>
             <Grid.Column width={10}>
                 <ActivityDetailsHeader activity={selectedActivity}/>
@@ -47,7 +30,7 @@ function ActivityDetails() {
                 <ActivityDetailsChat />
             </Grid.Column>
             <Grid.Column width={6}>
-                <ActivityDetailsSideBar />
+                <ActivityDetailsSideBar activity={selectedActivity} />
             </Grid.Column>
         </Grid>
     )
